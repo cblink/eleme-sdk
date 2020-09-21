@@ -13,6 +13,7 @@ use Pimple\Container;
  * @property \Laraver\Eleme\Oauth\PreAuthorization       $pre_auth
  *
  * @method array getToken($authCode = null, $refresh = true)
+ * @method array setRedirectUrl($redirectUrl)
  * @method array getCode()
  * @method array getState()
  */

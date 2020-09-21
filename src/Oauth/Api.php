@@ -19,6 +19,11 @@ class Api extends CoreApi
      */
     protected $request;
 
+    /**
+     * @var string
+     */
+    protected $redirectUrl;
+
     public function __construct(AuthorizerAccessToken $accessToken)
     {
         parent::__construct($accessToken);
@@ -52,13 +57,24 @@ class Api extends CoreApi
     }
 
     /**
+     * @param $redirectUrl
+     * @return $this
+     */
+    public function setRedirectUrl($redirectUrl)
+    {
+        $this->redirectUrl = $redirectUrl;
+        return $this;
+    }
+
+    /**
      * @param null $authCode
      * @param bool $refresh
      *
+     * @param null $redirectUrl
      * @return mixed|string
      */
     public function getToken($authCode = null, $refresh = false)
     {
-        return $this->accessToken->getTokenFromServer($authCode, $refresh);
+        return $this->accessToken->getTokenFromServer($authCode, $refresh, $this->redirectUrl);
     }
 }

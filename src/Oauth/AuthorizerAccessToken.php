@@ -2,9 +2,9 @@
 
 namespace Laraver\Eleme\Oauth;
 
-use Laraver\Eleme\Core\AccessToken as CoreAccessToken;
 use Laraver\Eleme\Core\Api as CoreApi;
 use Symfony\Component\HttpFoundation\Request;
+use Laraver\Eleme\Core\AccessToken as CoreAccessToken;
 
 class AuthorizerAccessToken extends CoreAccessToken
 {
@@ -40,17 +40,17 @@ class AuthorizerAccessToken extends CoreAccessToken
         return $this;
     }
 
-    public function getTokenFromServer($authCode = null, $refresh = false)
+    public function getTokenFromServer($authCode = null, $refresh = false, $redirectUrl = null)
     {
         if ($refresh) {
             return $this->refreshToken($authCode);
         }
 
-        $response = (new CoreApi($this))->getHttp()->post($this->getUrl().'/token', [
+        $response = (new CoreApi($this))->getHttp()->post($this->getUrl() . '/token', [
             'grant_type'   => 'authorization_code',
             'client_id'    => $this->getAppId(),
             'code'         => $authCode ?: $this->request->get('code'),
-            'redirect_uri' => $this->request->getUri(),
+            'redirect_uri' => $redirectUrl ?: $this->request->getUri(),
         ]);
 
         return json_decode(strval($response->getBody()), true);
@@ -58,7 +58,7 @@ class AuthorizerAccessToken extends CoreAccessToken
 
     public function refreshToken($refreshToken)
     {
-        $response = (new CoreApi($this))->getHttp()->post($this->getUrl().'/token', [
+        $response = (new CoreApi($this))->getHttp()->post($this->getUrl() . '/token', [
             'grant_type'    => 'refresh_token',
             'refresh_token' => $refreshToken,
         ]);
